@@ -1,0 +1,319 @@
+{
+  "name": "The Inside Space - Daily Lessons",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        16
+      ],
+      "id": "99ebada0-4b5d-4d0d-9244-eb389b9d1a9b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblfdVbrRVCVLd5ZQ",
+          "mode": "list",
+          "cachedResultName": "תלמידים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblfdVbrRVCVLd5ZQ"
+        },
+        "filterByFormula": "{status} = 'פעיל'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        16
+      ],
+      "id": "b52f698d-19e3-4f88-8cc3-802ad6017ce3",
+      "name": "Search records",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblr84yqGJ99MQ82w",
+          "mode": "list",
+          "cachedResultName": "שיעורים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblr84yqGJ99MQ82w"
+        },
+        "filterByFormula": "={מספר שיעור} = {{ $json.fields.Number }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        16
+      ],
+      "id": "a3fd93aa-5993-4c15-9936-79ed1fef1103",
+      "name": "Search records1",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Search records').item.json.fields.Email }}",
+        "subject": "={{ $json.fields['סיכום (טקסט להודעת וואטסאפ)'].value }}",
+        "emailType": "text",
+        "message": "={{ $json.fields['סיכום (טקסט להודעת וואטסאפ)'].value }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        16
+      ],
+      "id": "cbb163d0-6a13-48ce-b96e-5c9c7333fba1",
+      "name": "Send a message",
+      "webhookId": "36e65092-7ed3-463d-af0e-827c1e778945",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PpdW5ZxB1gUFkxeq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblfdVbrRVCVLd5ZQ",
+          "mode": "list",
+          "cachedResultName": "תלמידים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblfdVbrRVCVLd5ZQ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search records').item.json.id }}",
+            "Number": "={{ $('Search records').item.json.fields.Number + 1 }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "פעיל",
+                  "value": "פעיל"
+                },
+                {
+                  "name": "סיים קורס",
+                  "value": "סיים קורס"
+                },
+                {
+                  "name": "מוקפא",
+                  "value": "מוקפא"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1088,
+        16
+      ],
+      "id": "055cef8a-b32a-4a25-9f41-81883ca9a9cd",
+      "name": "Update record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Search records1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f1890455-7317-4e42-9dc5-5b953bd4665d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "953575e3e767e9462bf52f82706e2353265f61e7dd55df5dec905d9732d78d64"
+  },
+  "nodeGroups": [],
+  "id": "aeWlbFzp166kEZIA",
+  "tags": []
+}

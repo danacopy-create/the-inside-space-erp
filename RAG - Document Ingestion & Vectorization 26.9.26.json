@@ -1,0 +1,222 @@
+{
+  "name": "RAG - Document Ingestion & Vectorization",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        304,
+        64
+      ],
+      "id": "a3c33d38-19db-4905-9c81-9cb47ce0e6cd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1ce9fIT3-eSbkxoFMfErKs5tSYAcMijsEg9rV1O23-s8",
+          "mode": "list",
+          "cachedResultName": "Products.txt",
+          "cachedResultUrl": "https://docs.google.com/document/d/1ce9fIT3-eSbkxoFMfErKs5tSYAcMijsEg9rV1O23-s8/edit?usp=drivesdk"
+        },
+        "options": {
+          "fileName": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        528,
+        64
+      ],
+      "id": "2c23ecd2-cc60-4e92-9788-97f9269a4eb4",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "XtODbcM5RIVI73AS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1csj_BbURIPKJOMEu0RHq4G-CDCH-EShO_LYjsbY1QVk",
+          "mode": "list",
+          "cachedResultName": "Policy.txt",
+          "cachedResultUrl": "https://docs.google.com/document/d/1csj_BbURIPKJOMEu0RHq4G-CDCH-EShO_LYjsbY1QVk/edit?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        544,
+        208
+      ],
+      "id": "050e82aa-c14c-4c35-8516-fd803b12f06a",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "XtODbcM5RIVI73AS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        752,
+        192
+      ],
+      "id": "9d30bf99-1d3d-43e7-ac88-ad5983318710",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        192
+      ],
+      "id": "5d326a85-f8e3-4867-ab20-247894d74fc7",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        976,
+        448
+      ],
+      "id": "a4406749-2beb-4c74-b384-ef283b574ff5",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        400
+      ],
+      "id": "c13e986e-555f-4913-92e6-ad68c85bf8ad",
+      "name": "Default Data Loader"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c77e8da2-0f6d-44a6-9e8f-973b0e971f61",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "953575e3e767e9462bf52f82706e2353265f61e7dd55df5dec905d9732d78d64"
+  },
+  "nodeGroups": [],
+  "id": "bCmiUbzfiO37QKeN",
+  "tags": []
+}

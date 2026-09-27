@@ -1,0 +1,617 @@
+{
+  "name": "Moving Space AI Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        48,
+        176
+      ],
+      "id": "5e86680b-54dd-4e98-bd23-231decfd9dca",
+      "name": "Telegram Trigger",
+      "webhookId": "ec5a081a-de6a-4dae-8b5e-2e0d90bf8bad",
+      "credentials": {
+        "telegramApi": {
+          "id": "FxB53xvwqMhw3rpK",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=אתה עוזר וירטואלי חברותי ומקצועי לקורס. \nעליך לענות על שאלת המשתמש אך ורק בהתבסס על תוכן השיעור המצורף כאן מתוך מסד הנתונים.\nאל תמציא מידע שאינו מופיע בתוכן השיעור.\n\nתוכן השיעור מהמערכת: \n{{ $json.fields['גוף התוכן לשיעור'].value }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        816,
+        176
+      ],
+      "id": "63b5bc0c-ee56-40e6-bf77-3294337b4ec1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        400
+      ],
+      "id": "90765881-914c-4758-9521-c664b75ad8e6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        176
+      ],
+      "id": "85ae48a9-03ad-4aae-85a3-236e2af5d4b4",
+      "name": "Send a text message",
+      "webhookId": "015def05-d175-46b4-ba19-5d043e599ab4",
+      "credentials": {
+        "telegramApi": {
+          "id": "FxB53xvwqMhw3rpK",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblr84yqGJ99MQ82w",
+          "mode": "list",
+          "cachedResultName": "שיעורים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblr84yqGJ99MQ82w"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Sent",
+            "id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "מספר שיעור",
+              "displayName": "מספר שיעור",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "שם השיעור",
+              "displayName": "שם השיעור",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Template ID - תבנית גוגל דוקס",
+              "displayName": "Template ID - תבנית גוגל דוקס",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "קישור לוידאו",
+              "displayName": "קישור לוידאו",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "טקסט להודעת וואטסאפ",
+              "displayName": "טקסט להודעת וואטסאפ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "סיכום (טקסט להודעת וואטסאפ)",
+              "displayName": "סיכום (טקסט להודעת וואטסאפ)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "מטרת הליבה",
+              "displayName": "מטרת הליבה",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "גוף התוכן לשיעור",
+              "displayName": "גוף התוכן לשיעור",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "כותרת ראשית (טקסט לשיעור)",
+              "displayName": "כותרת ראשית (טקסט לשיעור)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "התרגיל המעשי",
+              "displayName": "התרגיל המעשי",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "סיכום (התרגיל המעשי)",
+              "displayName": "סיכום (התרגיל המעשי)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "כותרת ראשית (התרגיל המעשי)",
+              "displayName": "כותרת ראשית (התרגיל המעשי)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1552,
+        176
+      ],
+      "id": "c028e8e2-4fdd-417e-b0cb-e5cfa8542c56",
+      "name": "Update record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f10807c5-3cf5-41fc-9c1e-58b1a1e01fb0",
+              "name": "searchQuery",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        480,
+        176
+      ],
+      "id": "6adcc1b4-be06-466b-9373-e32de7125ffb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblr84yqGJ99MQ82w",
+          "mode": "list",
+          "cachedResultName": "שיעורים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblr84yqGJ99MQ82w"
+        },
+        "filterByFormula": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        176
+      ],
+      "id": "0e6e2631-a41c-4a03-a74a-a7d81bfd5f6f",
+      "name": "Search records",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=המשתמש שאל שאלה לגבי קורס. חלץ מתוך השאלה אך ורק מילת מפתח אחת בודדת וייחודית (שם עצם בלבד, ללא פעלים כמו 'להסיר', וללא ה' הידיעה או אותיות יחס). לדוגמה, אם השאלה היא על 'גבולות' החזר רק: גבולות. אם השאלה היא על 'להסיר את השריון' החזר רק: שריון. לעולם אל תחזיר יותר ממילה אחת! השאלה: {{ $json.message.text }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        176
+      ],
+      "id": "1f1950e1-106d-47bd-8c19-be917a9d3def",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "52d3c8f8-9b41-4d57-9eef-bd82456fb22e",
+              "name": "id",
+              "value": "={{ $('Search records').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1344,
+        176
+      ],
+      "id": "d3d20db2-92d1-40ed-87db-e67d51c76180",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": " קליטת הודעה - המאזין שממתין להודעת טקסט נכנסת מהמשתמש ומפעיל את השרשרת"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "541dbbb7-61b5-44a6-b8b9-3f34b328947e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "זיקוק שאלה: ניתוח טקסט חופשי והוצאת מילת מפתח נקייה בלבד"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        256,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "14f149fd-f414-4a76-bfd5-d349ccabab0f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": " התאמת מבנה המשתנים להמשך הצינור (העברת מפתח החיפוש)\nשלב ד: שליפת נתונים - חיפוש השורה המתאימה בטבלת השיעורים לפי מילת המפתח שנמצאה"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "395f01e9-ce38-4d9a-a401-ab3773dc5948",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "המוח המרכזי - קריאת תוכן השיעור שנשלף, ניסוח תשובה אדיבה לתלמיד, והגנה מפני שאלות שלא שייכות לקורס"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "757c7187-8e87-4301-9593-37767688470c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "מענה לטלגרם: שליחת התשובה המנוסחת ישירות חזרה לטלפון של התלמיד"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "cf9bd115-ac73-4371-834a-83f63cabcdc6",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "שמירת תעודת זהות: העברת ה-ID המדויק של שורת האיירטייבל לשלב הסגירה\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1296,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "e971bf82-78c7-430f-b96a-c78af3e4eb68",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "עדכון סטטוס: סימון השורה באיירטייבל מ-Pending ל-Sent כדי לסגור מעגל"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1536,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "533bc287-ca65-46d0-9d23-6a4a9f4af406",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a54cbf9e-c7b3-4bd9-aea8-cd9f1706f728",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "953575e3e767e9462bf52f82706e2353265f61e7dd55df5dec905d9732d78d64"
+  },
+  "nodeGroups": [],
+  "id": "If4ZQhN46IBfQdNx",
+  "tags": []
+}

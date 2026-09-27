@@ -1,0 +1,283 @@
+{
+  "name": "The Inside Space - Onboarding",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "הרשמה לקורס The Inside Space",
+        "formDescription": "איזה כיף שהצטרפתם! אנא מלאו את הפרטים שלכם כדי שנוכל להתחיל במסע.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "שם מלא"
+            },
+            {
+              "fieldLabel": "טלפון (וואטסאפ)"
+            },
+            {
+              "fieldLabel": "אימייל",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -768,
+        32
+      ],
+      "id": "8bd1c271-84e4-46ab-b18f-e56aba397dba",
+      "name": "On form submission",
+      "webhookId": "92d53147-04c5-4609-a3df-65059a2aebfe"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblfdVbrRVCVLd5ZQ",
+          "mode": "list",
+          "cachedResultName": "תלמידים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblfdVbrRVCVLd5ZQ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json['שם מלא'] }}",
+            "Phone": "={{ $json['טלפון (וואטסאפ)'] }}",
+            "Email": "={{ $json['אימייל'] }}",
+            "Number": 1,
+            "status": "פעיל"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "פעיל",
+                  "value": "פעיל"
+                },
+                {
+                  "name": "סיים קורס",
+                  "value": "סיים קורס"
+                },
+                {
+                  "name": "מוקפא",
+                  "value": "מוקפא"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        16
+      ],
+      "id": "41f0c8bc-1c3f-47d9-9be7-883c95e6517a",
+      "name": "Create a record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appebDk0z89LHqDq4",
+          "mode": "list",
+          "cachedResultName": "The Inside Space - System",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblfdVbrRVCVLd5ZQ",
+          "mode": "list",
+          "cachedResultName": "תלמידים",
+          "cachedResultUrl": "https://airtable.com/appebDk0z89LHqDq4/tblfdVbrRVCVLd5ZQ"
+        },
+        "filterByFormula": "={Email} = \"{{ $json.email }}\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -512,
+        32
+      ],
+      "id": "032921d8-577d-4eaa-9351-4611197aa7a0",
+      "name": "Search records",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "xQYihkBohKZUzOxS",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "082f4aa4-fab8-43b4-8491-7318b071c5d1",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        32
+      ],
+      "id": "ec957cec-aea7-4e8e-8252-40fc98a0cda5",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f941ae30-4abf-4cee-8141-f718c613e81b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "953575e3e767e9462bf52f82706e2353265f61e7dd55df5dec905d9732d78d64"
+  },
+  "nodeGroups": [],
+  "id": "wPXO00FX8x8nvudZ",
+  "tags": []
+}
