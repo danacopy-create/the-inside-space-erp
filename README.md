@@ -11,3 +11,7 @@ An AI-powered ERP system built for a small Israeli business, utilizing n8n Cloud
 - **Telegram Integration:** Connected via Telegram Bot API for the Manager Agent.
 - ## Execution Proof (Telegram)
 ![Telegram Bot Proof](./telegram-proof.png)
+## System Documentation & Policies (Google Docs)
+- **מסמך אפיון מערכת:** [צפה במסמך האפיון](https://docs.google.com/document/d/14TwD95pet6TS_6vGb0EDj6Prg_pHATixxOlBkwX0Mdc/edit?tab=t.0)
+- **מסמך מוצרים:** [צפה במסמך המוצרים](https://docs.google.com/document/d/1ce9fIT3-eSbkxoFMfErKs5tSYAcMijsEg9rV1O23-s8/edit?usp=sharing)
+- **מסמך מדיניות:** [צפה במסמך המדיניות](https://docs.google.com/document/d/1csj_BbURIPKJOMEu0RHq4G-CDCH-EShO_LYjsbY1QVk/edit?tab=t.0)
